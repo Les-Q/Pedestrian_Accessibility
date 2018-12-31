@@ -11,7 +11,7 @@ Beware: multiple bugs needed to be sorted out in order to install all the necess
 
 Created on Sat Dec 29 22:17:24 2018
 
-@author: Bonny
+@author: Les
 """
 
 print("\nLoading libraries")
@@ -124,7 +124,8 @@ amenities2 = ['restaurant','cafe','bank','park']
 
 # request them from the OpenStreetMap API (Overpass)
 print("\nImporting list of Points Of Interest")
-all_pois = osm.node_query(bbox['south'], bbox['west'], bbox['north'], bbox['east'])#,tags="amenity")
+#all_pois = osm.node_query(bbox['south'], bbox['west'], bbox['north'], bbox['east'])#,tags="amenity")
+all_pois= pd.read_pickle('./Melbourne_POIs_nodes-and-ways_amenities-only.pkl')
 pois = all_pois[all_pois['amenity'].isin(amenities)]
 
 print("\nComputing accessibility for the closest {} POIs within {} meters".format(max_pois, max_dist))

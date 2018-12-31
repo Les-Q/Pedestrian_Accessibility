@@ -3,7 +3,7 @@
 Helper functions used fro accessibility analysis
 Created on Sun Dec 30 15:33:36 2018
 
-@author: Bonny
+@author: Les
 """
 
 import pandas as pd
