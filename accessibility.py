@@ -43,7 +43,7 @@ melbourne_house_poi = Point( 144.97766, -37.75807) # our house, Lincoln Street
 torino_bbox = {'south':45.0027314, 'west':7.6118697 ,'north':45.1139324, 'east':7.6973155}
 torino_house_poi = Point(7.6486667, 45.0656553) # Dario's house
 
-city_name = 'Melbourne'
+city_name = 'Torino'
 max_dist = 3000 #CONSIDER ONLY AMENITIES WITHIN THIS DISTANCE (IN METERS)
 max_pois = 3    #consider a max number of points of interest (always within the max distance)
 
@@ -125,7 +125,7 @@ amenities2 = ['restaurant','cafe','bank','park']
 # request them from the OpenStreetMap API (Overpass)
 print("\nImporting list of Points Of Interest")
 #all_pois = osm.node_query(bbox['south'], bbox['west'], bbox['north'], bbox['east'])#,tags="amenity")
-all_pois= pd.read_pickle('./Melbourne_POIs_nodes-and-ways_amenities-only.pkl')
+all_pois= pd.read_pickle('./{city}_POIs_nodes-and-ways_amenities-only.pkl'.format(city=city_name))
 pois = all_pois[all_pois['amenity'].isin(amenities)]
 
 print("\nComputing accessibility for the closest {} POIs within {} meters".format(max_pois, max_dist))
