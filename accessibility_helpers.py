@@ -93,7 +93,8 @@ def create_edges_df(G):
 # -- default: distance to nearest amenity
 # -- if a parameter n is supplied, distance to the nth nearest amenity
 
-def plot_nearest_amenity(network,amenity,n, bbox, max_dist=1000, max_pois=1, city_name='Melbourne',patches=None, fig_size=None):
+def plot_nearest_amenity(network,amenity,n, bbox, max_dist=1000, max_pois=1, city_name='Melbourne',
+                         plot_type='scatter', patches=None, fig_size=None):
     
     accessibility = network.nearest_pois(distance=max_dist, category=amenity, num_pois=max_pois)
     
@@ -108,11 +109,14 @@ def plot_nearest_amenity(network,amenity,n, bbox, max_dist=1000, max_pois=1, cit
     bmap.drawmapboundary()
     x, y = bmap(network.nodes_df.x.values, network.nodes_df.y.values)
     
-    plot_kwargs = {'s':2, 'alpha':0.9, 'cmap':'viridis_r', 'edgecolor':'none'}
-    plot = bmap.scatter( x, y, c=accessibility[n].values,latlon=False, **plot_kwargs)
-    #plot_kwargs = { 'alpha':0.9, 'cmap':'viridis_r', 'edgecolor':'none'}
-    #plot = bmap.hexbin( x, y, C=accessibility[n].values, ax=ax, **plot_kwargs)
-
+    if plot_type=='scatter':
+        plot_kwargs = {'s':2, 'alpha':0.9, 'cmap':'viridis_r', 'edgecolor':'none'}
+        plot = bmap.scatter( x, y, c=accessibility[n].values,latlon=True, **plot_kwargs)
+    elif plot_type=='hex':
+        plot_kwargs = { 'alpha':0.9, 'cmap':'viridis_r', 'edgecolor':'none'}
+        plot = bmap.hexbin( x, y, C=accessibility[n].values, **plot_kwargs)
+    else:
+        raise ValueError("Invalid 'plot_type' input argument ({}). Valid options are: 'scatter', 'hex'".format(plot_type))
     # create an axes on the right side of ax. The width of cax will be 5%
     # of ax and the padding between cax and ax will be fixed at 0.05 inch.
     #divider = make_axes_locatable(ax1)
