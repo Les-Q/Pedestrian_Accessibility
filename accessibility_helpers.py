@@ -110,7 +110,7 @@ def plot_nearest_amenity(network,amenity,n, bbox, max_dist=1000, max_pois=1, cit
     x, y = bmap(network.nodes_df.x.values, network.nodes_df.y.values)
     
     if plot_type=='scatter':
-        plot_kwargs = {'s':2, 'alpha':0.9, 'cmap':'viridis_r', 'edgecolor':'none'}
+        plot_kwargs = {'s':5, 'alpha':0.9, 'cmap':'viridis_r', 'edgecolor':'none'}
         plot = bmap.scatter( x, y, c=accessibility[n].values,latlon=True, **plot_kwargs)
     elif plot_type=='hex':
         plot_kwargs = { 'alpha':0.9, 'cmap':'viridis_r', 'edgecolor':'none'}
