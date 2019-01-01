@@ -205,8 +205,7 @@ def node_query_by_id(node_ids,v=False):
 
         if len(node_data['elements']) == 0:
             raise RuntimeError('OSM query results contain no data.')
-#        if v:
-#            print(node_data['elements'])    
+
         return osm.process_node(node_data['elements'][0]) 
     
 def node_query_TMP(query):
@@ -294,13 +293,13 @@ def feature_query(lat_min, lng_min, lat_max, lng_max, tags, features=['nodes', '
     
 if __name__=='__main__':
     melbourne_bbox = {'south':-37.83, 'west':144.855 ,'north':-37.73, 'east':145.010}
-    torino_bbox = {'south':45.0027314, 'west':7.6118697 ,'north':45.1139324, 'east':7.6973155}
+    torino_bbox = {'south':45.005, 'west':7.578 ,'north':45.140, 'east':7.773}
 
-    q1 = osm.build_node_query(melbourne_bbox['south'], melbourne_bbox['west'], melbourne_bbox['north'], melbourne_bbox['east'], tags='amenity')
-    print(q1)
-    #node_data1 = node_query_TMP(q1)
-    q2 = build_way_query(melbourne_bbox['south'], melbourne_bbox['west'], melbourne_bbox['north'], melbourne_bbox['east'], tags='amenity')
-    print(q2)
+#    q1 = osm.build_node_query(melbourne_bbox['south'], melbourne_bbox['west'], melbourne_bbox['north'], melbourne_bbox['east'], tags='amenity')
+#    print(q1)
+#    #node_data1 = node_query_TMP(q1)
+#    q2 = build_way_query(melbourne_bbox['south'], melbourne_bbox['west'], melbourne_bbox['north'], melbourne_bbox['east'], tags='amenity')
+#    print(q2)
     node_data2 = feature_query(torino_bbox['south'], torino_bbox['west'], torino_bbox['north'], torino_bbox['east'], 
                                tags='amenity', features=['nodes', 'ways'])
     node_data2.to_pickle('./Torino_POIs_nodes-and-ways_amenities-only.pkl')
