@@ -92,7 +92,6 @@ if city_name=='Torino':
     gdf_string = "Torino, Italy"
     
 gdf = ox.gdf_from_place(gdf_string)
-#gdf = ox.project_gdf(gdf)
 
 ###the output G is a networkx multidigraph; can be plotted easily
 print("\nPlotting network")
@@ -165,8 +164,10 @@ print("\nComputing accessibility for the closest {} POIs within {} meters".forma
 for amenity in amenities:
     pois_subset = pois.loc[pois['amenity']==amenity , ]
     net.set_pois(category=amenity, maxdist=max_dist, maxitems=max_pois, x_col=pois_subset['lon'], y_col=pois_subset['lat'])
-
-n1 = net.nearest_pois(max_dist, "school", num_pois=max_pois, include_poi_ids=True)
+#### end for loop
+    
+###     
+n1 = net.nearest_pois(max_dist, amenities[0], num_pois=max_pois, include_poi_ids=True)
 print("\n***************")
 print(n1.describe())
 print("\n***************\n")
@@ -175,17 +176,17 @@ fig_size=( fig_height*w_over_h*1.15,fig_height)#add some buffer for the side col
 #if city_name=='Torino':
 #    fig_size=(8,10)
     
-for a in amenities:
-    print("\nPlotting {}".format(a))
+for amenity in amenities:
+    print("\nPlotting {}".format(amenity))
     house_patch2 = PolygonPatch(house_poi.buffer(0.001), fc='red', ec='red', linewidth=3,alpha=1, zorder=1)
     patches = [house_patch2]
-    sel_pois = pois.loc[pois['amenity']==a, ['amenity','name','lat','lon']]
+    sel_pois = pois.loc[pois['amenity']==amenity, ['amenity','name','lat','lon']]
     for i in range(0,sel_pois.shape[0],1):
         tmp_poi = Point( (sel_pois['lon'].values)[i], (sel_pois['lat'].values)[i])
         patches.append(PolygonPatch(tmp_poi.buffer(0.001), fc='purple', ec='purple', linewidth=3,alpha=1, zorder=1) )
     
-    bm, fig, ax = plot_nearest_amenity(net, a, 1, list(bbox.values()), max_dist, max_pois, city_name=city_name, 
-                                       patches=patches, fig_size=fig_size)
+    bm, fig, ax = plot_nearest_amenity(net, amenity, 1, list(bbox.values()), max_dist, max_pois, city_name=city_name, 
+                                       plot_type='hex', patches=patches, fig_size=fig_size)
     
     # to this matplotlib axis, add the place shape as descartes polygon patches
     for geometry in gdf['geometry'].tolist():
@@ -197,5 +198,22 @@ for a in amenities:
                 ax.add_patch(patch)
 
     #ax.add_patch(house_patch2)
-    fig.savefig('./{}_accessibility_{}.png'.format( city_name,a), bbox_anchor='tight')
+    fig.savefig('./{}_accessibility_{}_hex.png'.format( city_name,amenity), bbox_anchor='tight')
+    plt.gcf().clear()
+
+####now same but in scatter plot format
+    bmB, figB, axB = plot_nearest_amenity(net, amenity, 1, list(bbox.values()), max_dist, max_pois, city_name=city_name, 
+                                       plot_type='scatter', patches=patches, fig_size=fig_size)
+    
+    # to this matplotlib axis, add the place shape as descartes polygon patches
+    for geometry in gdf['geometry'].tolist():
+        if isinstance(geometry, (Polygon, MultiPolygon)):
+            if isinstance(geometry, Polygon):
+                geometry = MultiPolygon([geometry])
+            for polygon in geometry:
+                patch = PolygonPatch(polygon, fill=False, ec='yellow', linewidth=4, alpha=1, zorder=1)
+                axB.add_patch(patch)
+
+    #ax.add_patch(house_patch2)
+    figB.savefig('./{}_accessibility_{}_scatter.png'.format( city_name,amenity), bbox_anchor='tight')
     plt.gcf().clear()
