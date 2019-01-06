@@ -7,6 +7,7 @@ Created on Sun Dec 30 15:33:36 2018
 """
 
 import pandas as pd
+from copy import copy
 #import mpl_toolkits
 #mpl_toolkits.__path__.append("C:\\Users\\Bonny\\Anaconda3\\Lib\\site-packages\\mpl_toolkits")
 from mpl_toolkits.basemap import Basemap ### needs basemap lib: conda install -c conda-forge basemap
@@ -76,9 +77,9 @@ def create_edges_df(G):
     edges_df = pd.DataFrame(edges_ref).T
     
     # for the purposes of this example, we are not going
-    # to both with impedence along edge so they all get
+    # to bother with impedence along edge so they all get
     # set to the same value of 1
-    edges_df['weight'] = 1
+    edges_df['weight'] = 100
     edges_df = edges_df[['st_node', 'en_node', 'length', 'weight']]
     # update the edge start and stop nodes as integers
     # which is necessary for Pandana
@@ -110,7 +111,7 @@ def plot_nearest_amenity(network,amenity,n, bbox, max_dist=1000, max_pois=1, cit
     x, y = bmap(network.nodes_df.x.values, network.nodes_df.y.values)
     
     if plot_type=='scatter':
-        plot_kwargs = {'s':5, 'alpha':0.9, 'cmap':'viridis_r', 'edgecolor':'none'}
+        plot_kwargs = {'s':8, 'alpha':0.9, 'cmap':'viridis_r', 'edgecolor':'none'}
         plot = bmap.scatter( x, y, c=accessibility[n].values,latlon=True, **plot_kwargs)
     elif plot_type=='hex':
         plot_kwargs = { 'alpha':0.9, 'cmap':'viridis_r', 'edgecolor':'none'}
@@ -129,7 +130,7 @@ def plot_nearest_amenity(network,amenity,n, bbox, max_dist=1000, max_pois=1, cit
     
     if patches is not None:
         for p in patches:
-            ax1.add_patch(p)
+            ax1.add_patch(copy(p) )
               
                   
     ax1.set_aspect('auto')
